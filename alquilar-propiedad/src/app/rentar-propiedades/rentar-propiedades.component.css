@@ -1,0 +1,370 @@
+.rentar-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Propiedad seleccionada */
+.propiedad-seleccionada h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.2em;
+}
+
+.propiedad-resumen {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.propiedad-imagen {
+  position: relative;
+}
+
+.propiedad-imagen img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tipo-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 15px;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.tipo-badge.casa {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.tipo-badge.apartamento {
+  background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+}
+
+.propiedad-datos h2 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 1.4em;
+}
+
+.ubicacion {
+  color: #6c757d;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+}
+
+.caracteristicas-rapidas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.precio {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.propietario {
+  margin: 0;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Formulario */
+.formulario-section h2 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.instrucciones {
+  background: #e7f3ff;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+  margin-bottom: 25px;
+  color: #004085;
+  font-size: 14px;
+}
+
+.formulario-cliente {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.campo-grupo {
+  margin-bottom: 20px;
+}
+
+.campo-grupo label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+}
+
+.campo-grupo input,
+.campo-grupo select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.campo-grupo input:focus,
+.campo-grupo select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.botones-accion {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.btn-cancelar,
+.btn-enviar {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.btn-cancelar {
+  background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+  color: white;
+}
+
+.btn-cancelar:hover {
+  background: linear-gradient(135deg, #545b62 0%, #3d4142 100%);
+  transform: translateY(-2px);
+}
+
+.btn-enviar {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.btn-enviar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #20c997 0%, #17a085 100%);
+  transform: translateY(-2px);
+}
+
+.btn-enviar:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Procesamiento */
+.procesando-section {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loader-container h2 {
+  color: #2c3e50;
+  margin: 20px 0 10px 0;
+}
+
+.loader-container p {
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Confirmación */
+.confirmacion-section {
+  text-align: center;
+  padding: 20px;
+}
+
+.mensaje-exito {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border-radius: 12px;
+  padding: 30px;
+  border: 2px solid #28a745;
+}
+
+.icono-exito {
+  font-size: 4em;
+  margin-bottom: 15px;
+}
+
+.mensaje-exito h2 {
+  color: #155724;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+}
+
+.mensaje-principal {
+  color: #155724;
+  font-size: 16px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.info-procesamiento {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.info-procesamiento h3,
+.info-procesamiento h4 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.info-procesamiento p {
+  color: #495057;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.pasos-siguientes ul {
+  color: #495057;
+  line-height: 1.6;
+  padding-left: 20px;
+}
+
+.pasos-siguientes li {
+  margin-bottom: 8px;
+}
+
+.datos-referencia {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+.datos-referencia p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.botones-finales {
+  margin-top: 25px;
+}
+
+.btn-nueva-busqueda {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-nueva-busqueda:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-2px);
+}
+
+/* Error */
+.error-container {
+  text-align: center;
+  padding: 60px 20px;
+  color: #721c24;
+}
+
+.error-container h2 {
+  margin-bottom: 15px;
+}
+
+.btn-volver {
+  background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+  background: linear-gradient(135deg, #545b62 0%, #3d4142 100%);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .propiedad-resumen {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .botones-accion {
+    flex-direction: column;
+  }
+  
+  .caracteristicas-rapidas {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rentar-container {
+    padding: 10px;
+  }
+  
+  .formulario-cliente {
+    padding: 15px;
+  }
+  
+  .mensaje-exito {
+    padding: 20px;
+  }
+}

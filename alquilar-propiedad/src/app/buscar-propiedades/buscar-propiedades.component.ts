@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface Propiedad {
   id: number;
@@ -90,11 +91,11 @@ export class BuscarPropiedadesComponent {
       descripcion: 'Acogedor apartamento tipo estudio, perfecto para estudiantes'
     }
   ];
+  
+  constructor(private router: Router) {}
 
   rentar(propiedad: Propiedad) {
-    console.log('Rentando propiedad:', propiedad);
-    // Por ahora solo un console.log, más adelante conectaremos con el routing
-    alert(`Iniciando proceso de renta para: ${propiedad.direccion}`);
+    this.router.navigate(['/renta', propiedad.id]);
   }
 
   formatearPrecio(precio: number): string {

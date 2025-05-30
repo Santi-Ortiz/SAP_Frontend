@@ -1,1 +1,165 @@
-<p>rentar-propiedades works!</p>
+<div class="rentar-container" *ngIf="propiedadSeleccionada">
+
+  <!-- Información de la propiedad seleccionada -->
+  <div class="propiedad-seleccionada">
+    <h1>🏠 Solicitud de Alquiler</h1>
+    
+    <div class="propiedad-resumen">
+      <div class="propiedad-imagen">
+        <img [src]="propiedadSeleccionada.fotoPrincipal" 
+             [alt]="propiedadSeleccionada.direccion">
+        <span class="tipo-badge" [class]="propiedadSeleccionada.tipo">
+          {{propiedadSeleccionada.tipo}}
+        </span>
+      </div>
+      
+      <div class="propiedad-datos">
+        <h2>{{propiedadSeleccionada.direccion}}</h2>
+        <p class="ubicacion">📍 {{propiedadSeleccionada.ubicacion}}</p>
+        <div class="caracteristicas-rapidas">
+          <span>🛏️ {{propiedadSeleccionada.numeroCuartos}} cuartos</span>
+          <span class="precio">{{formatearPrecio(propiedadSeleccionada.renta)}}/mes</span>
+        </div>
+        <p class="propietario">👤 Propietario: {{propiedadSeleccionada.nombreDueno}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de datos del cliente -->
+  <div class="formulario-section" *ngIf="mostrarFormulario && !procesando">
+    <h2>📋 Datos del Solicitante</h2>
+    <p class="instrucciones">
+      Complete la siguiente información para procesar su solicitud de alquiler.
+      Todos los campos son obligatorios.
+    </p>
+
+    <form class="formulario-cliente" (ngSubmit)="enviarSolicitud()">
+      
+      <!-- Nombre completo -->
+      <div class="campo-grupo">
+        <label for="nombre">Nombre Completo *</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          [(ngModel)]="cliente.nombre" 
+          name="nombre"
+          placeholder="Ingrese su nombre completo"
+          required>
+      </div>
+
+      <!-- Correo electrónico -->
+      <div class="campo-grupo">
+        <label for="correo">Correo Electrónico *</label>
+        <input 
+          type="email" 
+          id="correo" 
+          [(ngModel)]="cliente.correoElectronico" 
+          name="correo"
+          placeholder="ejemplo@correo.com"
+          required>
+      </div>
+
+      <!-- Tipo de identificación -->
+      <div class="campo-grupo">
+        <label for="tipoId">Tipo de Identificación *</label>
+        <select 
+          id="tipoId" 
+          [(ngModel)]="cliente.tipoIdentificacion" 
+          name="tipoId"
+          required>
+          <option value="">Seleccione un tipo</option>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="CE">Cédula de Extranjería</option>
+          <option value="PA">Pasaporte</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="NIT">NIT</option>
+        </select>
+      </div>
+
+      <!-- Número de identificación -->
+      <div class="campo-grupo">
+        <label for="numeroId">Número de Identificación *</label>
+        <input 
+          type="text" 
+          id="numeroId" 
+          [(ngModel)]="cliente.numeroIdentificacion" 
+          name="numeroId"
+          placeholder="Ingrese su número de identificación"
+          required>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="botones-accion">
+        <button type="button" class="btn-cancelar" (click)="volverABuscar()">
+          ← Volver a Buscar
+        </button>
+        <button type="submit" class="btn-enviar" [disabled]="!validarFormulario()">
+          Enviar Solicitud
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Pantalla de procesamiento -->
+  <div class="procesando-section" *ngIf="procesando">
+    <div class="loader-container">
+      <div class="loader"></div>
+      <h2>⏳ Procesando su solicitud...</h2>
+      <p>Por favor espere mientras procesamos su información.</p>
+    </div>
+  </div>
+
+  <!-- Mensaje de confirmación -->
+  <div class="confirmacion-section" *ngIf="solicitudEnviada && !procesando">
+    <div class="mensaje-exito">
+      <div class="icono-exito">✅</div>
+      <h2>¡Solicitud Enviada Exitosamente!</h2>
+      <p class="mensaje-principal">
+        Su solicitud de alquiler para la propiedad <strong>{{propiedadSeleccionada.direccion}}</strong> 
+        ha sido recibida y está siendo procesada.
+      </p>
+      
+      <div class="info-procesamiento">
+        <h3>Proceso de Validación</h3>
+        <p>
+          Su solicitud está siendo <strong>procesada y validada por la institución financiera</strong>
+        </p>
+        
+        <div class="pasos-siguientes">
+          <h4>📋 Próximos pasos:</h4>
+          <ul>
+            <li>Recibirá un correo de confirmación en: <strong>{{cliente.correoElectronico}}</strong></li>
+            <li>La institución financiera validará su información</li>
+            <li>Se comunicarán con usted para coordinar la firma del contrato</li>
+            <li>El propietario será notificado de su interés</li>
+          </ul>
+        </div>
+
+        <div class="datos-referencia">
+          <h4>📄 Datos de referencia:</h4>
+          <p><strong>Solicitante:</strong> {{cliente.nombre}}</p>
+          <p><strong>Identificación:</strong> {{cliente.tipoIdentificacion}} {{cliente.numeroIdentificacion}}</p>
+          <p><strong>Fecha de solicitud:</strong> {{fechaSolicitud}}</p>
+          <p><strong>Número de referencia:</strong> #{{numeroReferencia}}</p>
+        </div>
+      </div>
+
+      <div class="botones-finales">
+        <button class="btn-nueva-busqueda" (click)="volverABuscar()">
+          🔍 Buscar Otras Propiedades
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Mensaje de error si no se encuentra la propiedad -->
+<div class="error-container" *ngIf="!propiedadSeleccionada">
+  <h2>❌ Propiedad no encontrada</h2>
+  <p>Lo sentimos, no pudimos encontrar la propiedad solicitada.</p>
+  <button class="btn-volver" (click)="volverABuscar()">
+    ← Volver a Buscar Propiedades
+  </button>
+</div>
