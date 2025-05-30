@@ -1,21 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Propiedad } from '../models/propiedad.model';
 
-interface Propiedad {
-  id: number;
-  tipo: 'casa' | 'apartamento';
-  direccion: string;
+interface FiltrosBusqueda {
+  tipo: string;
   ubicacion: string;
-  numeroCuartos: number;
-  renta: number;
-  identificacionDueno: string;
-  nombreDueno: string;
-  telefonoDueno: string;
-  emailDueno: string;
-  fotoPrincipal: string;
-  fechaRegistroCompra: Date;
-  fechaConstruccion: Date;
-  descripcion: string;
+  numeroCuartos: string;
+  rentaMin: number;
+  rentaMax: number;
+  fechaConstruccionDesde: string;
+  fechaConstruccionHasta: string;
 }
 
 @Component({
@@ -23,9 +17,10 @@ interface Propiedad {
   templateUrl: './buscar-propiedades.component.html',
   styleUrls: ['./buscar-propiedades.component.css']
 })
-export class BuscarPropiedadesComponent {
+export class BuscarPropiedadesComponent implements OnInit {
 
-  propiedades: Propiedad[] = [
+  // Propiedades originales (sin filtrar)
+  propiedadesOriginales: Propiedad[] = [
     {
       id: 1,
       tipo: 'casa',
@@ -89,10 +84,176 @@ export class BuscarPropiedadesComponent {
       fechaRegistroCompra: new Date('2023-03-12'),
       fechaConstruccion: new Date('2021-07-22'),
       descripcion: 'Acogedor apartamento tipo estudio, perfecto para estudiantes'
+    },
+    {
+      id: 5,
+      tipo: 'casa',
+      direccion: 'Avenida 70 #15-25',
+      ubicacion: 'Occidente - Robledo',
+      numeroCuartos: 5,
+      renta: 2000000,
+      identificacionDueno: '99887766',
+      nombreDueno: 'Luis Fernando García',
+      telefonoDueno: '+57 304 555 6789',
+      emailDueno: 'luis.garcia@email.com',
+      fotoPrincipal: 'assets/casa3.jpg',
+      fechaRegistroCompra: new Date('2022-12-05'),
+      fechaConstruccion: new Date('2017-08-15'),
+      descripcion: 'Casa campestre con amplio jardín y vista panorámica'
+    },
+    {
+      id: 6,
+      tipo: 'apartamento',
+      direccion: 'Carrera 43A #20-50 Apto 801',
+      ubicacion: 'Centro - El Poblado',
+      numeroCuartos: 3,
+      renta: 1100000,
+      identificacionDueno: '44556677',
+      nombreDueno: 'Patricia Ramírez',
+      telefonoDueno: '+57 318 444 5555',
+      emailDueno: 'patricia.ramirez@email.com',
+      fotoPrincipal: 'assets/apto3.jpg',
+      fechaRegistroCompra: new Date('2023-08-18'),
+      fechaConstruccion: new Date('2020-12-10'),
+      descripcion: 'Moderno apartamento con balcón y excelente vista a la ciudad'
     }
   ];
-  
+
+  // Propiedades filtradas que se muestran
+  propiedades: Propiedad[] = [];
+
+  // Filtros
+  filtros: FiltrosBusqueda = {
+    tipo: '',
+    ubicacion: '',
+    numeroCuartos: '',
+    rentaMin: 0,
+    rentaMax: 0,
+    fechaConstruccionDesde: '',
+    fechaConstruccionHasta: ''
+  };
+
+  // Opciones para los dropdowns (se generan dinámicamente)
+  opcionesTipo: string[] = [];
+  opcionesUbicacion: string[] = [];
+  opcionesCuartos: number[] = [];
+  rangosRenta = [
+    { label: 'Cualquier precio', min: 0, max: 0 },
+    { label: 'Hasta $500,000', min: 0, max: 500000 },
+    { label: '$500,000 - $1,000,000', min: 500000, max: 1000000 },
+    { label: '$1,000,000 - $1,500,000', min: 1000000, max: 1500000 },
+    { label: '$1,500,000 - $2,000,000', min: 1500000, max: 2000000 },
+    { label: 'Más de $2,000,000', min: 2000000, max: 0 }
+  ];
+
+  // Estado UI
+  mostrarFiltros: boolean = false;
+  contadorResultados: number = 0;
+  filtrosActivos: boolean = false;
+
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.inicializarDatos();
+    this.generarOpcionesFiltros();
+    this.aplicarFiltros();
+  }
+
+  inicializarDatos() {
+    this.propiedades = [...this.propiedadesOriginales];
+    this.contadorResultados = this.propiedades.length;
+  }
+
+  generarOpcionesFiltros() {
+    // Generar opciones únicas para tipo
+    this.opcionesTipo = [...new Set(this.propiedadesOriginales.map(p => p.tipo))];
+    
+    // Generar opciones únicas para ubicación
+    this.opcionesUbicacion = [...new Set(this.propiedadesOriginales.map(p => p.ubicacion))];
+    
+    // Generar opciones únicas para número de cuartos
+    this.opcionesCuartos = [...new Set(this.propiedadesOriginales.map(p => p.numeroCuartos))].sort((a, b) => a - b);
+  }
+
+  toggleFiltros() {
+    this.mostrarFiltros = !this.mostrarFiltros;
+  }
+
+  aplicarFiltros() {
+    let propiedadesFiltradas = [...this.propiedadesOriginales];
+
+    // Filtro por tipo
+    if (this.filtros.tipo) {
+      propiedadesFiltradas = propiedadesFiltradas.filter(p => p.tipo === this.filtros.tipo);
+    }
+
+    // Filtro por ubicación
+    if (this.filtros.ubicacion) {
+      propiedadesFiltradas = propiedadesFiltradas.filter(p => p.ubicacion === this.filtros.ubicacion);
+    }
+
+    // Filtro por número de cuartos
+    if (this.filtros.numeroCuartos) {
+      propiedadesFiltradas = propiedadesFiltradas.filter(p => p.numeroCuartos === +this.filtros.numeroCuartos);
+    }
+
+    // Filtro por rango de renta
+    if (this.filtros.rentaMin > 0 || this.filtros.rentaMax > 0) {
+      propiedadesFiltradas = propiedadesFiltradas.filter(p => {
+        const cumpleMin = this.filtros.rentaMin === 0 || p.renta >= this.filtros.rentaMin;
+        const cumpleMax = this.filtros.rentaMax === 0 || p.renta <= this.filtros.rentaMax;
+        return cumpleMin && cumpleMax;
+      });
+    }
+
+    // Filtro por fecha de construcción desde
+    if (this.filtros.fechaConstruccionDesde) {
+      const fechaDesde = new Date(this.filtros.fechaConstruccionDesde);
+      propiedadesFiltradas = propiedadesFiltradas.filter(p => p.fechaConstruccion >= fechaDesde);
+    }
+
+    // Filtro por fecha de construcción hasta
+    if (this.filtros.fechaConstruccionHasta) {
+      const fechaHasta = new Date(this.filtros.fechaConstruccionHasta);
+      propiedadesFiltradas = propiedadesFiltradas.filter(p => p.fechaConstruccion <= fechaHasta);
+    }
+
+    this.propiedades = propiedadesFiltradas;
+    this.contadorResultados = this.propiedades.length;
+    this.verificarFiltrosActivos();
+  }
+
+  onRangoRentaChange(event: any) {
+    const rango = this.rangosRenta[event.target.value];
+    this.filtros.rentaMin = rango.min;
+    this.filtros.rentaMax = rango.max;
+    this.aplicarFiltros();
+  }
+
+  limpiarFiltros() {
+    this.filtros = {
+      tipo: '',
+      ubicacion: '',
+      numeroCuartos: '',
+      rentaMin: 0,
+      rentaMax: 0,
+      fechaConstruccionDesde: '',
+      fechaConstruccionHasta: ''
+    };
+    this.aplicarFiltros();
+  }
+
+  verificarFiltrosActivos() {
+    this.filtrosActivos = !!(
+      this.filtros.tipo ||
+      this.filtros.ubicacion ||
+      this.filtros.numeroCuartos ||
+      this.filtros.rentaMin > 0 ||
+      this.filtros.rentaMax > 0 ||
+      this.filtros.fechaConstruccionDesde ||
+      this.filtros.fechaConstruccionHasta
+    );
+  }
 
   rentar(propiedad: Propiedad) {
     this.router.navigate(['/renta', propiedad.id]);
@@ -109,5 +270,4 @@ export class BuscarPropiedadesComponent {
   formatearFecha(fecha: Date): string {
     return fecha.toLocaleDateString('es-CO');
   }
-
 }

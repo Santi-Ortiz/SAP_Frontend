@@ -1,13 +1,124 @@
 <div class="buscar-container">
-  <h1>🏠 Propiedades Disponibles para Alquiler</h1>
   
-  <div class="propiedades-lista">
+  <!-- Header con título y contador -->
+  <div class="header-busqueda">
+    <h1>Propiedades Disponibles para Alquiler</h1>
+    <div class="resultados-info">
+      <span class="contador-resultados">
+        {{contadorResultados}} propiedad{{contadorResultados !== 1 ? 'es' : ''}} encontrada{{contadorResultados !== 1 ? 's' : ''}}
+      </span>
+      <button class="btn-toggle-filtros" (click)="toggleFiltros()" [class.activo]="mostrarFiltros">
+        {{mostrarFiltros ? 'Ocultar' : 'Mostrar'}} Filtros
+        <span class="indicador-filtros" *ngIf="filtrosActivos">●</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel de filtros -->
+  <div class="panel-filtros" [class.visible]="mostrarFiltros">
+    <div class="filtros-container">
+      
+      <div class="filtros-titulo">
+        <h3>Filtrar Propiedades</h3>
+        <button class="btn-limpiar" (click)="limpiarFiltros()" *ngIf="filtrosActivos">
+          Limpiar Filtros
+        </button>
+      </div>
+
+      <div class="filtros-grid">
+        
+        <!-- Filtro por tipo -->
+        <div class="filtro-grupo">
+          <label for="filtroTipo">Tipo de Propiedad</label>
+          <select id="filtroTipo" [(ngModel)]="filtros.tipo" (change)="aplicarFiltros()">
+            <option value="">Todos los tipos</option>
+            <option *ngFor="let tipo of opcionesTipo" [value]="tipo">
+              {{tipo | titlecase}}
+            </option>
+          </select>
+        </div>
+
+        <!-- Filtro por ubicación -->
+        <div class="filtro-grupo">
+          <label for="filtroUbicacion">Ubicación</label>
+          <select id="filtroUbicacion" [(ngModel)]="filtros.ubicacion" (change)="aplicarFiltros()">
+            <option value="">Todas las ubicaciones</option>
+            <option *ngFor="let ubicacion of opcionesUbicacion" [value]="ubicacion">
+              {{ubicacion}}
+            </option>
+          </select>
+        </div>
+
+        <!-- Filtro por número de cuartos -->
+        <div class="filtro-grupo">
+          <label for="filtroCuartos">Número de Cuartos</label>
+          <select id="filtroCuartos" [(ngModel)]="filtros.numeroCuartos" (change)="aplicarFiltros()">
+            <option value="">Cualquier cantidad</option>
+            <option *ngFor="let cuartos of opcionesCuartos" [value]="cuartos">
+              {{cuartos}} cuarto{{cuartos !== 1 ? 's' : ''}}
+            </option>
+          </select>
+        </div>
+
+        <!-- Filtro por rango de renta -->
+        <div class="filtro-grupo">
+          <label for="filtroRenta">Rango de Renta</label>
+          <select id="filtroRenta" (change)="onRangoRentaChange($event)">
+            <option *ngFor="let rango of rangosRenta; let i = index" [value]="i">
+              {{rango.label}}
+            </option>
+          </select>
+        </div>
+
+      
+      </div>
+
+      <!-- Filtros activos -->
+      <div class="filtros-activos" *ngIf="filtrosActivos">
+        <h4>Filtros aplicados:</h4>
+        <div class="tags-filtros">
+          <span class="tag-filtro" *ngIf="filtros.tipo">
+            Tipo: {{filtros.tipo | titlecase}}
+            <button (click)="filtros.tipo = ''; aplicarFiltros()">×</button>
+          </span>
+          <span class="tag-filtro" *ngIf="filtros.ubicacion">
+            Ubicación: {{filtros.ubicacion}}
+            <button (click)="filtros.ubicacion = ''; aplicarFiltros()">×</button>
+          </span>
+          <span class="tag-filtro" *ngIf="filtros.numeroCuartos">
+            {{filtros.numeroCuartos}} cuarto{{+filtros.numeroCuartos !== 1 ? 's' : ''}}
+            <button (click)="filtros.numeroCuartos = ''; aplicarFiltros()">×</button>
+          </span>
+          <span class="tag-filtro" *ngIf="filtros.rentaMin > 0 || filtros.rentaMax > 0">
+            Renta: {{formatearPrecio(filtros.rentaMin)}} - {{filtros.rentaMax > 0 ? formatearPrecio(filtros.rentaMax) : 'Sin límite'}}
+            <button (click)="filtros.rentaMin = 0; filtros.rentaMax = 0; aplicarFiltros()">×</button>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div class="sin-resultados" *ngIf="contadorResultados === 0">
+    <div class="mensaje-sin-resultados">
+      <h2>No se encontraron propiedades</h2>
+      <p>No hay propiedades que coincidan con los filtros seleccionados.</p>
+      <button class="btn-limpiar-grande" (click)="limpiarFiltros()">
+        Limpiar todos los filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de propiedades -->
+  <div class="propiedades-lista" *ngIf="contadorResultados > 0">
     <div class="propiedad-card" *ngFor="let propiedad of propiedades">
       
       <!-- Imagen de la propiedad -->
       <div class="propiedad-imagen">
         <img [src]="propiedad.fotoPrincipal" 
-             [alt]="propiedad.direccion">
+             [alt]="propiedad.direccion" 
+             onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'">
         <span class="tipo-badge" [class]="propiedad.tipo">{{propiedad.tipo}}</span>
       </div>
 
@@ -36,7 +147,7 @@
           </div>
         </div>
 
-        <!-- Información del dueno -->
+        <!-- Información del dueño -->
         <div class="dueno-section">
           <h4>👤 Propietario</h4>
           <p><strong>{{propiedad.nombreDueno}}</strong></p>
@@ -48,11 +159,11 @@
         <!-- Fechas importantes -->
         <div class="fechas-section">
           <div class="fecha-item">
-            <span class="label">🏗️ Construida:</span>
+            <span class="label">Construida:</span>
             <span class="valor">{{formatearFecha(propiedad.fechaConstruccion)}}</span>
           </div>
           <div class="fecha-item">
-            <span class="label">📋 Registrada:</span>
+            <span class="label">Registrada:</span>
             <span class="valor">{{formatearFecha(propiedad.fechaRegistroCompra)}}</span>
           </div>
         </div>
@@ -65,7 +176,7 @@
         <!-- Botón de renta -->
         <div class="accion-section">
           <button class="btn-rentar" (click)="rentar(propiedad)">
-            🏠 Rentar Esta Propiedad
+            Rentar Esta Propiedad
           </button>
         </div>
 

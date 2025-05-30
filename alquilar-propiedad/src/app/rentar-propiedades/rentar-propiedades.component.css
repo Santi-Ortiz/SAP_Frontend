@@ -2,7 +2,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Propiedad seleccionada */
@@ -336,6 +336,54 @@
 .btn-volver:hover {
   background: linear-gradient(135deg, #545b62 0%, #3d4142 100%);
   transform: translateY(-2px);
+}
+
+.campo-error {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.mensaje-error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+  font-weight: 500;
+}
+
+.ayuda-texto {
+  color: #6c757d;
+  font-size: 11px;
+  margin-top: 3px;
+  display: block;
+  font-style: italic;
+}
+
+.campo-grupo input.campo-error,
+.campo-grupo select.campo-error {
+  background-color: #fff5f5;
+}
+
+.campo-grupo input:valid {
+  border-color: #28a745;
+}
+
+.campo-grupo input:valid:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+/* Mejorar el aspecto del botón deshabilitado */
+.btn-enviar:disabled {
+  background: #6c757d !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  opacity: 0.7;
+}
+
+.btn-enviar:disabled:hover {
+  background: #6c757d !important;
+  transform: none !important;
 }
 
 /* Responsive */

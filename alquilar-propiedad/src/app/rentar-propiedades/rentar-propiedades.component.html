@@ -2,12 +2,13 @@
 
   <!-- Información de la propiedad seleccionada -->
   <div class="propiedad-seleccionada">
-    <h1>🏠 Solicitud de Alquiler</h1>
+    <h1>Solicitud de Renta</h1>
     
     <div class="propiedad-resumen">
       <div class="propiedad-imagen">
         <img [src]="propiedadSeleccionada.fotoPrincipal" 
-             [alt]="propiedadSeleccionada.direccion">
+             [alt]="propiedadSeleccionada.direccion"
+             onerror="this.src='https://via.placeholder.com/200x150?text=Sin+Imagen'">
         <span class="tipo-badge" [class]="propiedadSeleccionada.tipo">
           {{propiedadSeleccionada.tipo}}
         </span>
@@ -44,7 +45,25 @@
           [(ngModel)]="cliente.nombre" 
           name="nombre"
           placeholder="Ingrese su nombre completo"
+          (blur)="onBlurNombre()"
+          [class.campo-error]="camposTocados.nombre && errores.nombre"
           required>
+        <span class="mensaje-error" *ngIf="camposTocados.nombre && errores.nombre">{{errores.nombre}}</span>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="campo-grupo">
+        <label for="contrasena">Contraseña *</label>
+        <input 
+          type="password" 
+          id="contrasena" 
+          [(ngModel)]="cliente.contrasena" 
+          name="contrasena"
+          placeholder="Mínimo 6 caracteres"
+          (blur)="onBlurContrasena()"
+          [class.campo-error]="camposTocados.contrasena && errores.contrasena"
+          required>
+        <span class="mensaje-error" *ngIf="camposTocados.contrasena && errores.contrasena">{{errores.contrasena}}</span>
       </div>
 
       <!-- Correo electrónico -->
@@ -56,7 +75,11 @@
           [(ngModel)]="cliente.correoElectronico" 
           name="correo"
           placeholder="ejemplo@correo.com"
+          (blur)="onBlurCorreo()"
+          [class.campo-error]="camposTocados.correoElectronico && errores.correoElectronico"
           required>
+        <span class="mensaje-error" *ngIf="camposTocados.correoElectronico && errores.correoElectronico">{{errores.correoElectronico}}</span>
+        <small class="ayuda-texto">Formato válido: usuario@dominio.com</small>
       </div>
 
       <!-- Tipo de identificación -->
@@ -66,6 +89,8 @@
           id="tipoId" 
           [(ngModel)]="cliente.tipoIdentificacion" 
           name="tipoId"
+          (blur)="onBlurTipoId()"
+          [class.campo-error]="camposTocados.tipoIdentificacion && errores.tipoIdentificacion"
           required>
           <option value="">Seleccione un tipo</option>
           <option value="CC">Cédula de Ciudadanía</option>
@@ -74,6 +99,7 @@
           <option value="TI">Tarjeta de Identidad</option>
           <option value="NIT">NIT</option>
         </select>
+        <span class="mensaje-error" *ngIf="camposTocados.tipoIdentificacion && errores.tipoIdentificacion">{{errores.tipoIdentificacion}}</span>
       </div>
 
       <!-- Número de identificación -->
@@ -85,7 +111,10 @@
           [(ngModel)]="cliente.numeroIdentificacion" 
           name="numeroId"
           placeholder="Ingrese su número de identificación"
+          (blur)="onBlurNumeroId()"
+          [class.campo-error]="camposTocados.numeroIdentificacion && errores.numeroIdentificacion"
           required>
+        <span class="mensaje-error" *ngIf="camposTocados.numeroIdentificacion && errores.numeroIdentificacion">{{errores.numeroIdentificacion}}</span>
       </div>
 
       <!-- Botones de acción -->
@@ -93,7 +122,7 @@
         <button type="button" class="btn-cancelar" (click)="volverABuscar()">
           ← Volver a Buscar
         </button>
-        <button type="submit" class="btn-enviar" [disabled]="!validarFormulario()">
+        <button type="submit" class="btn-enviar" [disabled]="!validarFormularioSinErrores()">
           Enviar Solicitud
         </button>
       </div>
@@ -123,7 +152,8 @@
       <div class="info-procesamiento">
         <h3>Proceso de Validación</h3>
         <p>
-          Su solicitud está siendo <strong>procesada y validada por la institución financiera</strong>
+          Su solicitud está siendo <strong>procesada y validada por la institución financiera</strong>. 
+          Este proceso puede tomar entre 24 a 72 horas hábiles.
         </p>
         
         <div class="pasos-siguientes">
@@ -147,7 +177,7 @@
 
       <div class="botones-finales">
         <button class="btn-nueva-busqueda" (click)="volverABuscar()">
-          🔍 Buscar Otras Propiedades
+          Buscar Otras Propiedades
         </button>
       </div>
     </div>
@@ -157,7 +187,7 @@
 
 <!-- Mensaje de error si no se encuentra la propiedad -->
 <div class="error-container" *ngIf="!propiedadSeleccionada">
-  <h2>❌ Propiedad no encontrada</h2>
+  <h2>Propiedad no encontrada</h2>
   <p>Lo sentimos, no pudimos encontrar la propiedad solicitada.</p>
   <button class="btn-volver" (click)="volverABuscar()">
     ← Volver a Buscar Propiedades
