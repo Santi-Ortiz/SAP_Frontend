@@ -1,0 +1,298 @@
+.buscar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.2em;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.propiedades-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* Tarjeta de propiedad */
+.propiedad-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid #e9ecef;
+  position: relative;
+}
+
+.propiedad-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+  border-color: #007bff;
+}
+
+/* Sección de imagen */
+.propiedad-imagen {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.propiedad-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.propiedad-card:hover .propiedad-imagen img {
+  transform: scale(1.05);
+}
+
+.tipo-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 15px;
+  border-radius: 25px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.tipo-badge.casa {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.tipo-badge.apartamento {
+  background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+}
+
+/* Información de la propiedad */
+.propiedad-info {
+  padding: 25px;
+}
+
+/* Sección de dirección */
+.direccion-section {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.direccion-section h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.4em;
+  font-weight: 600;
+}
+
+.ubicacion {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Características */
+.caracteristicas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.caracteristica-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.caracteristica-item .label {
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.caracteristica-item .valor {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 600;
+}
+
+.caracteristica-item .precio {
+  color: #28a745;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Sección del dueño */
+.dueno-section {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid #2196f3;
+}
+
+.dueno-section h4 {
+  margin: 0 0 10px 0;
+  color: #1976d2;
+  font-size: 1.1em;
+}
+
+.dueno-section p {
+  margin: 5px 0;
+  font-size: 13px;
+  color: #424242;
+}
+
+.id-dueno {
+  font-family: 'Courier New', monospace;
+  background: rgba(255,255,255,0.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.contacto {
+  font-size: 12px !important;
+  color: #666 !important;
+}
+
+/* Fechas */
+.fechas-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+  background: #fff3cd;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid #ffc107;
+}
+
+.fecha-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.fecha-item .label {
+  font-size: 11px;
+  color: #856404;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.fecha-item .valor {
+  font-size: 12px;
+  color: #495057;
+  font-weight: 500;
+}
+
+/* Descripción */
+.descripcion-section {
+  margin-bottom: 20px;
+}
+
+.descripcion {
+  color: #495057;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: justify;
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid #6c757d;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Botón de renta */
+.accion-section {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 2px solid #e9ecef;
+}
+
+.btn-rentar {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+  width: 100%;
+}
+
+.btn-rentar:hover {
+  background: linear-gradient(135deg, #20c997 0%, #17a085 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40,167,69,0.4);
+}
+
+.btn-rentar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(40,167,69,0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .propiedades-lista {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .propiedad-card {
+    margin: 0 10px;
+  }
+  
+  .caracteristicas {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .fechas-section {
+    grid-template-columns: 1fr;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buscar-container {
+    padding: 10px;
+  }
+  
+  .propiedad-info {
+    padding: 15px;
+  }
+  
+  .direccion-section h3 {
+    font-size: 1.2em;
+  }
+}

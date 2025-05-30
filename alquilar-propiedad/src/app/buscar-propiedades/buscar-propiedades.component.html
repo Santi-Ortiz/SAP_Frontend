@@ -1,0 +1,75 @@
+<div class="buscar-container">
+  <h1>🏠 Propiedades Disponibles para Alquiler</h1>
+  
+  <div class="propiedades-lista">
+    <div class="propiedad-card" *ngFor="let propiedad of propiedades">
+      
+      <!-- Imagen de la propiedad -->
+      <div class="propiedad-imagen">
+        <img [src]="propiedad.fotoPrincipal" 
+             [alt]="propiedad.direccion">
+        <span class="tipo-badge" [class]="propiedad.tipo">{{propiedad.tipo}}</span>
+      </div>
+
+      <!-- Información principal -->
+      <div class="propiedad-info">
+        
+        <!-- Dirección y ubicación -->
+        <div class="direccion-section">
+          <h3>{{propiedad.direccion}}</h3>
+          <p class="ubicacion">📍 {{propiedad.ubicacion}}</p>
+        </div>
+
+        <!-- Características básicas -->
+        <div class="caracteristicas">
+          <div class="caracteristica-item">
+            <span class="label">Tipo:</span>
+            <span class="valor">{{propiedad.tipo | titlecase}}</span>
+          </div>
+          <div class="caracteristica-item">
+            <span class="label">Cuartos:</span>
+            <span class="valor">{{propiedad.numeroCuartos}}</span>
+          </div>
+          <div class="caracteristica-item">
+            <span class="label">Renta:</span>
+            <span class="valor precio">{{formatearPrecio(propiedad.renta)}}/mes</span>
+          </div>
+        </div>
+
+        <!-- Información del dueno -->
+        <div class="dueno-section">
+          <h4>👤 Propietario</h4>
+          <p><strong>{{propiedad.nombreDueno}}</strong></p>
+          <p class="id-dueno">ID: {{propiedad.identificacionDueno}}</p>
+          <p class="contacto">📞 {{propiedad.telefonoDueno}}</p>
+          <p class="contacto">📧 {{propiedad.emailDueno}}</p>
+        </div>
+
+        <!-- Fechas importantes -->
+        <div class="fechas-section">
+          <div class="fecha-item">
+            <span class="label">🏗️ Construida:</span>
+            <span class="valor">{{formatearFecha(propiedad.fechaConstruccion)}}</span>
+          </div>
+          <div class="fecha-item">
+            <span class="label">📋 Registrada:</span>
+            <span class="valor">{{formatearFecha(propiedad.fechaRegistroCompra)}}</span>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="descripcion-section">
+          <p class="descripcion">{{propiedad.descripcion}}</p>
+        </div>
+
+        <!-- Botón de renta -->
+        <div class="accion-section">
+          <button class="btn-rentar" (click)="rentar(propiedad)">
+            🏠 Rentar Esta Propiedad
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
