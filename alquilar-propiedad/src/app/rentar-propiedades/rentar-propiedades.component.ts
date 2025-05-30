@@ -42,7 +42,7 @@ export class RentarPropiedadesComponent implements OnInit {
     numeroIdentificacion: ''
   };
 
-  // Controlar si los campos han sido tocados
+  // Controlar si los campos han sido cambiados
   camposTocados: {
     nombre: boolean;
     contrasena: boolean;
@@ -57,7 +57,7 @@ export class RentarPropiedadesComponent implements OnInit {
     numeroIdentificacion: false
   };
 
-  // Regex para validar email
+  // Regex para validar el correo electrónico
   private emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   // Datos del formulario
@@ -69,7 +69,6 @@ export class RentarPropiedadesComponent implements OnInit {
     numeroIdentificacion: ''
   };
 
-  // ...existing code... (mantén todos los datos de propiedades)
   propiedades: Propiedad[] = [
     {
       id: 1,
@@ -134,6 +133,38 @@ export class RentarPropiedadesComponent implements OnInit {
       fechaRegistroCompra: new Date('2023-03-12'),
       fechaConstruccion: new Date('2021-07-22'),
       descripcion: 'Acogedor apartamento tipo estudio, perfecto para estudiantes'
+    },
+    {
+      id: 5,
+      tipo: 'casa',
+      direccion: 'Avenida 70 #15-25',
+      ubicacion: 'Occidente - Robledo',
+      numeroCuartos: 5,
+      renta: 2000000,
+      identificacionDueno: '99887766',
+      nombreDueno: 'Luis Fernando García',
+      telefonoDueno: '+57 304 555 6789',
+      emailDueno: 'luis.garcia@email.com',
+      fotoPrincipal: 'assets/casa3.jpg',
+      fechaRegistroCompra: new Date('2022-12-05'),
+      fechaConstruccion: new Date('2017-08-15'),
+      descripcion: 'Casa campestre con amplio jardín y vista panorámica'
+    },
+    {
+      id: 6,
+      tipo: 'apartamento',
+      direccion: 'Carrera 43A #20-50 Apto 801',
+      ubicacion: 'Centro - El Poblado',
+      numeroCuartos: 3,
+      renta: 1100000,
+      identificacionDueno: '44556677',
+      nombreDueno: 'Patricia Ramírez',
+      telefonoDueno: '+57 318 444 5555',
+      emailDueno: 'patricia.ramirez@email.com',
+      fotoPrincipal: 'assets/apto3.jpg',
+      fechaRegistroCompra: new Date('2023-08-18'),
+      fechaConstruccion: new Date('2020-12-10'),
+      descripcion: 'Moderno apartamento con balcón y excelente vista a la ciudad'
     }
   ];
 
