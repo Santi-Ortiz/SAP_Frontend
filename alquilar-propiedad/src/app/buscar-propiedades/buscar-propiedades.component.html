@@ -117,8 +117,7 @@
       <!-- Imagen de la propiedad -->
       <div class="propiedad-imagen">
         <img [src]="propiedad.fotoPrincipal" 
-             [alt]="propiedad.direccion" 
-             onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'">
+             [alt]="propiedad.direccion" >
         <span class="tipo-badge" [class]="propiedad.tipo">{{propiedad.tipo}}</span>
       </div>
 
