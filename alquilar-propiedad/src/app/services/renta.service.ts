@@ -28,6 +28,8 @@ export class SolicitudService {
 
   // Enviar solicitud de renta
   enviarSolicitudRenta(solicitud: Renta): Observable<any> {
+    console.log('🌐 Enviando solicitud a:', this.apiUrl);
+    console.log('📝 Datos de la solicitud:', solicitud);
     return this.http.post<any>(this.apiUrl, solicitud, this.httpOptions);
   }
 

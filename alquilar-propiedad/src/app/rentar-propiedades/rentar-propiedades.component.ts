@@ -269,14 +269,20 @@ export class RentarPropiedadesComponent implements OnInit {
       numeroDoc: this.cliente.numeroDoc
     };
 
+    /*const solicitud: Renta = {
+      idPropiedad: 1,
+      nombre: "Juanita Franco",
+      correo: "franco_juanita@javeriana.edu.co",
+      contrasena: "1234",
+      tipoDoc: "CC",
+      numeroDoc: "123456"  
+    }*/
+
     // Enviar al backend
     this.solicitudService.enviarSolicitudRenta(solicitud).subscribe({
-      next: (response: { numeroReferencia: string; }) => {
+      next: (response: any) => {
         console.log('Solicitud enviada exitosamente:', response);
         
-        // Generar datos para mostrar
-        this.fechaSolicitud = new Date().toLocaleDateString('es-CO');
-        this.numeroReferencia = response.numeroReferencia || `ALQ${this.idPropiedad}${Date.now()}`;
         
         this.procesando = false;
         this.mostrarFormulario = false;

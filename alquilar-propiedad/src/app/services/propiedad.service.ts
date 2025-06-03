@@ -8,7 +8,7 @@ import { Propiedad } from '../models/propiedad.model';
 })
 export class PropiedadService {
   
-  private apiUrl = 'http://10.43.103.226:8080/MSBuscarPropiedad-0.0.1-SNAPSHOT/api/propiedades';
+  private apiUrl = 'http://10.43.103.226/propiedades';
   
   private httpOptions = {
     headers: new HttpHeaders({
