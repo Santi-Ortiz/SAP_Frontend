@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BuscarPropiedadesComponent } from './buscar-propiedades/buscar-propiedades.component';
 import { RentarPropiedadesComponent } from './rentar-propiedades/rentar-propiedades.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FormsModule
   ],
   providers: [],

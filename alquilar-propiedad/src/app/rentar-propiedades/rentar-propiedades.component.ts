@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Propiedad } from '../models/propiedad.model';
+import { PropiedadService } from '../services/propiedad.service';
+import { SolicitudService, Renta } from '../services/renta.service';
 
 interface Cliente {
   nombre: string;
@@ -22,6 +24,8 @@ export class RentarPropiedadesComponent implements OnInit {
   mostrarFormulario: boolean = true;
   solicitudEnviada: boolean = false;
   procesando: boolean = false;
+  cargandoPropiedad: boolean = false;
+  error: string = '';
 
   // Nuevas propiedades para fecha y número de referencia
   fechaSolicitud: string = '';
@@ -42,7 +46,7 @@ export class RentarPropiedadesComponent implements OnInit {
     numeroIdentificacion: ''
   };
 
-  // Controlar si los campos han sido cambiados
+  // Controlar si los campos han sido tocados
   camposTocados: {
     nombre: boolean;
     contrasena: boolean;
@@ -57,7 +61,7 @@ export class RentarPropiedadesComponent implements OnInit {
     numeroIdentificacion: false
   };
 
-  // Regex para validar el correo electrónico
+  // Regex para validar email
   private emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   // Datos del formulario
@@ -69,108 +73,11 @@ export class RentarPropiedadesComponent implements OnInit {
     numeroIdentificacion: ''
   };
 
-  propiedades: Propiedad[] = [
-    {
-      id: 1,
-      tipo: 'casa',
-      direccion: 'Calle 123 #45-67',
-      ubicacion: 'Zona Norte - Barrio Laureles',
-      numeroCuartos: 3,
-      renta: 1200000,
-      identificacionDueno: '12345678',
-      nombreDueno: 'Juanita Franco Sánchez',
-      telefonoDueno: '+57 301 234 5678',
-      emailDueno: 'juanita.franco@email.com',
-      fotoPrincipal: 'assets/casa1.jpg',
-      fechaRegistroCompra: new Date('2023-01-15'),
-      fechaConstruccion: new Date('2020-03-10'),
-      descripcion: 'Hermosa casa familiar con jardín amplio y garage para 2 vehículos'
-    },
-    {
-      id: 2,
-      tipo: 'apartamento',
-      direccion: 'Carrera 80 #25-30 Apto 502',
-      ubicacion: 'Centro - El Poblado',
-      numeroCuartos: 2,
-      renta: 800000,
-      identificacionDueno: '87654321',
-      nombreDueno: 'Gabriel Espitia',
-      telefonoDueno: '+57 312 987 6543',
-      emailDueno: 'gaby_esp@gmail.com',
-      fotoPrincipal: 'assets/apto1.jpg',
-      fechaRegistroCompra: new Date('2023-06-20'),
-      fechaConstruccion: new Date('2019-11-15'),
-      descripcion: 'Moderno apartamento en zona céntrica con excelente ubicación'
-    },
-    {
-      id: 3,
-      tipo: 'casa',
-      direccion: 'Calle 45 #12-89',
-      ubicacion: 'Sur - Envigado',
-      numeroCuartos: 4,
-      renta: 1500000,
-      identificacionDueno: '11223344',
-      nombreDueno: 'Santiago Ortiz Alarcón',
-      telefonoDueno: '+57 320 456 7890',
-      emailDueno: 'santiago.ortiz@email.com',
-      fotoPrincipal: 'assets/casa2.jpg',
-      fechaRegistroCompra: new Date('2022-09-10'),
-      fechaConstruccion: new Date('2018-05-20'),
-      descripcion: 'Amplia casa de dos pisos con piscina y zona social'
-    },
-    {
-      id: 4,
-      tipo: 'apartamento',
-      direccion: 'Carrera 15 #78-90 Apto 301',
-      ubicacion: 'Norte - La Candelaria',
-      numeroCuartos: 1,
-      renta: 600000,
-      identificacionDueno: '55667788',
-      nombreDueno: 'Ana Sofía Martínez',
-      telefonoDueno: '+57 315 123 4567',
-      emailDueno: 'ana.martinez@email.com',
-      fotoPrincipal: 'assets/apto2.jpg',
-      fechaRegistroCompra: new Date('2023-03-12'),
-      fechaConstruccion: new Date('2021-07-22'),
-      descripcion: 'Acogedor apartamento tipo estudio, perfecto para estudiantes'
-    },
-    {
-      id: 5,
-      tipo: 'casa',
-      direccion: 'Avenida 70 #15-25',
-      ubicacion: 'Occidente - Robledo',
-      numeroCuartos: 5,
-      renta: 2000000,
-      identificacionDueno: '99887766',
-      nombreDueno: 'Luis Fernando García',
-      telefonoDueno: '+57 304 555 6789',
-      emailDueno: 'luis.garcia@email.com',
-      fotoPrincipal: 'assets/casa3.jpg',
-      fechaRegistroCompra: new Date('2022-12-05'),
-      fechaConstruccion: new Date('2017-08-15'),
-      descripcion: 'Casa campestre con amplio jardín y vista panorámica'
-    },
-    {
-      id: 6,
-      tipo: 'apartamento',
-      direccion: 'Carrera 43A #20-50 Apto 801',
-      ubicacion: 'Centro - El Poblado',
-      numeroCuartos: 3,
-      renta: 1100000,
-      identificacionDueno: '44556677',
-      nombreDueno: 'Patricia Ramírez',
-      telefonoDueno: '+57 318 444 5555',
-      emailDueno: 'patricia.ramirez@email.com',
-      fotoPrincipal: 'assets/apto3.jpg',
-      fechaRegistroCompra: new Date('2023-08-18'),
-      fechaConstruccion: new Date('2020-12-10'),
-      descripcion: 'Moderno apartamento con balcón y excelente vista a la ciudad'
-    }
-  ];
-
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private propiedadService: PropiedadService,
+    private solicitudService: SolicitudService
   ) {}
 
   ngOnInit() {
@@ -181,13 +88,27 @@ export class RentarPropiedadesComponent implements OnInit {
   }
 
   cargarPropiedad() {
-    this.propiedadSeleccionada = this.propiedades.find(p => p.id === this.propiedadId) || null;
-    if (!this.propiedadSeleccionada) {
-      this.router.navigate(['/propiedades']);
-    }
+    this.cargandoPropiedad = true;
+    this.error = '';
+    
+    this.propiedadService.obtenerPropiedadPorId(this.propiedadId).subscribe({
+      next: (propiedad) => {
+        this.propiedadSeleccionada = propiedad;
+        this.cargandoPropiedad = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar la propiedad:', error);
+        this.error = 'Error al cargar la propiedad. Redirigiendo...';
+        this.cargandoPropiedad = false;
+        // Redirigir después de 3 segundos
+        setTimeout(() => {
+          this.router.navigate(['/propiedades']);
+        }, 3000);
+      }
+    });
   }
 
-  // Validación individual de campos
+  // ...existing code... (mantener todas las funciones de validación)
   validarNombre(): boolean {
     if (!this.camposTocados.nombre) return true;
     
@@ -336,23 +257,42 @@ export class RentarPropiedadesComponent implements OnInit {
 
     this.procesando = true;
 
-    // Generar fecha y número de referencia al momento de enviar
-    this.fechaSolicitud = new Date().toLocaleDateString('es-CO');
-    this.numeroReferencia = `ALQ${this.propiedadSeleccionada?.id}${Date.now()}`;
+    const solicitud: Renta = {
+      propiedadId: this.propiedadId,
+      nombreSolicitante: this.cliente.nombre,
+      correoElectronico: this.cliente.correoElectronico,
+      contrasena: this.cliente.contrasena,
+      tipoIdentificacion: this.cliente.tipoIdentificacion,
+      numeroIdentificacion: this.cliente.numeroIdentificacion
+    };
 
-    // Simular procesamiento (3 segundos)
-    setTimeout(() => {
-      this.procesando = false;
-      this.mostrarFormulario = false;
-      this.solicitudEnviada = true;
-      
-      console.log('Solicitud enviada:', {
-        propiedad: this.propiedadSeleccionada,
-        cliente: this.cliente,
-        fecha: this.fechaSolicitud,
-        referencia: this.numeroReferencia
-      });
-    }, 3000);
+    // Enviar al backend
+    this.solicitudService.enviarSolicitudRenta(solicitud).subscribe({
+      next: (response: { numeroReferencia: string; }) => {
+        console.log('Solicitud enviada exitosamente:', response);
+        
+        // Generar datos para mostrar
+        this.fechaSolicitud = new Date().toLocaleDateString('es-CO');
+        this.numeroReferencia = response.numeroReferencia || `ALQ${this.propiedadId}${Date.now()}`;
+        
+        this.procesando = false;
+        this.mostrarFormulario = false;
+        this.solicitudEnviada = true;
+      },
+      error: (error: { status: number; error: { message: any; }; message: any; }) => {
+        console.error('Error al enviar solicitud:', error);
+        this.procesando = false;
+        
+        // Mostrar mensaje de error específico
+        if (error.status === 0) {
+          alert('Error de conexión. No se pudo conectar con el servidor. Verifique su conexión a internet.');
+        } else if (error.status === 500) {
+          alert('Error del servidor. Por favor, intente nuevamente más tarde.');
+        } else {
+          alert('Error al enviar la solicitud: ' + (error.error?.message || error.message));
+        }
+      }
+    });
   }
 
   volverABuscar() {

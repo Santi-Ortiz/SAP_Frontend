@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Propiedad } from '../models/propiedad.model';
+import { PropiedadService } from '../services/propiedad.service';
 
 interface FiltrosBusqueda {
   tipo: string;
@@ -20,107 +21,14 @@ interface FiltrosBusqueda {
 export class BuscarPropiedadesComponent implements OnInit {
 
   // Propiedades originales (sin filtrar)
-  propiedadesOriginales: Propiedad[] = [
-    {
-      id: 1,
-      tipo: 'casa',
-      direccion: 'Calle 123 #45-67',
-      ubicacion: 'Zona Norte - Barrio Laureles',
-      numeroCuartos: 3,
-      renta: 1200000,
-      identificacionDueno: '12345678',
-      nombreDueno: 'Juanita Franco Sánchez',
-      telefonoDueno: '+57 301 234 5678',
-      emailDueno: 'juanita.franco@email.com',
-      fotoPrincipal: 'assets/casa1.jpg',
-      fechaRegistroCompra: new Date('2023-01-15'),
-      fechaConstruccion: new Date('2020-03-10'),
-      descripcion: 'Hermosa casa familiar con jardín amplio y garage para 2 vehículos'
-    },
-    {
-      id: 2,
-      tipo: 'apartamento',
-      direccion: 'Carrera 80 #25-30 Apto 502',
-      ubicacion: 'Centro - El Poblado',
-      numeroCuartos: 2,
-      renta: 800000,
-      identificacionDueno: '87654321',
-      nombreDueno: 'Gabriel Espitia',
-      telefonoDueno: '+57 312 987 6543',
-      emailDueno: 'gaby_esp@gmail.com',
-      fotoPrincipal: 'assets/apto1.jpg',
-      fechaRegistroCompra: new Date('2023-06-20'),
-      fechaConstruccion: new Date('2019-11-15'),
-      descripcion: 'Moderno apartamento en zona céntrica con excelente ubicación'
-    },
-    {
-      id: 3,
-      tipo: 'casa',
-      direccion: 'Calle 45 #12-89',
-      ubicacion: 'Sur - Envigado',
-      numeroCuartos: 4,
-      renta: 1500000,
-      identificacionDueno: '11223344',
-      nombreDueno: 'Santiago Ortiz Alarcón',
-      telefonoDueno: '+57 320 456 7890',
-      emailDueno: 'santiago.ortiz@email.com',
-      fotoPrincipal: 'assets/casa2.jpg',
-      fechaRegistroCompra: new Date('2022-09-10'),
-      fechaConstruccion: new Date('2018-05-20'),
-      descripcion: 'Amplia casa de dos pisos con piscina y zona social'
-    },
-    {
-      id: 4,
-      tipo: 'apartamento',
-      direccion: 'Carrera 15 #78-90 Apto 301',
-      ubicacion: 'Norte - La Candelaria',
-      numeroCuartos: 1,
-      renta: 600000,
-      identificacionDueno: '55667788',
-      nombreDueno: 'Ana Sofía Martínez',
-      telefonoDueno: '+57 315 123 4567',
-      emailDueno: 'ana.martinez@email.com',
-      fotoPrincipal: 'assets/apto2.jpg',
-      fechaRegistroCompra: new Date('2023-03-12'),
-      fechaConstruccion: new Date('2021-07-22'),
-      descripcion: 'Acogedor apartamento tipo estudio, perfecto para estudiantes'
-    },
-    {
-      id: 5,
-      tipo: 'casa',
-      direccion: 'Avenida 70 #15-25',
-      ubicacion: 'Occidente - Robledo',
-      numeroCuartos: 5,
-      renta: 2000000,
-      identificacionDueno: '99887766',
-      nombreDueno: 'Luis Fernando García',
-      telefonoDueno: '+57 304 555 6789',
-      emailDueno: 'luis.garcia@email.com',
-      fotoPrincipal: 'assets/casa3.jpg',
-      fechaRegistroCompra: new Date('2022-12-05'),
-      fechaConstruccion: new Date('2017-08-15'),
-      descripcion: 'Casa campestre con amplio jardín y vista panorámica'
-    },
-    {
-      id: 6,
-      tipo: 'apartamento',
-      direccion: 'Carrera 43A #20-50 Apto 801',
-      ubicacion: 'Centro - El Poblado',
-      numeroCuartos: 3,
-      renta: 1100000,
-      identificacionDueno: '44556677',
-      nombreDueno: 'Patricia Ramírez',
-      telefonoDueno: '+57 318 444 5555',
-      emailDueno: 'patricia.ramirez@email.com',
-      fotoPrincipal: 'assets/apto3.jpg',
-      fechaRegistroCompra: new Date('2023-08-18'),
-      fechaConstruccion: new Date('2020-12-10'),
-      descripcion: 'Moderno apartamento con balcón y excelente vista a la ciudad'
-    }
-  ];
-
+  propiedadesOriginales: Propiedad[] = [];
+  
   // Propiedades filtradas que se muestran
   propiedades: Propiedad[] = [];
+
+  // Estado de carga
+  cargando: boolean = false;
+  error: string = '';
 
   // Filtros
   filtros: FiltrosBusqueda = {
@@ -146,14 +54,77 @@ export class BuscarPropiedadesComponent implements OnInit {
     { label: 'Más de $2,000,000', min: 2000000, max: 0 }
   ];
 
-  // Estado UI
   mostrarFiltros: boolean = false;
   contadorResultados: number = 0;
   filtrosActivos: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private propiedadService: PropiedadService
+  ) {}
 
   ngOnInit() {
+    this.cargarPropiedades();
+  }
+
+  cargarPropiedades() {
+    this.cargando = true;
+    this.error = '';
+    
+    this.propiedadService.obtenerPropiedades().subscribe({
+      next: (propiedades) => {
+        this.propiedadesOriginales = propiedades;
+        this.inicializarDatos();
+        this.generarOpcionesFiltros();
+        this.aplicarFiltros();
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar propiedades:', error);
+        this.error = 'Error al cargar las propiedades. Por favor, intente nuevamente.';
+        this.cargando = false;
+        //this.usarDatosMock();
+      }
+    });
+  }
+
+  usarDatosMock() {
+    // Datos de respaldo en caso de error de conexión
+    this.propiedadesOriginales = [
+      {
+        id: 1,
+        tipo: 'casa',
+        direccion: 'Calle 123 #45-67',
+        ubicacion: 'Zona Norte - Barrio Laureles',
+        numeroCuartos: 3,
+        renta: 1200000,
+        identificacionDueno: '12345678',
+        nombreDueno: 'Juanita Franco Sánchez',
+        telefonoDueno: '+57 301 234 5678',
+        emailDueno: 'juanita.franco@email.com',
+        fotoPrincipal: 'assets/casa1.jpg',
+        fechaRegistroCompra: new Date('2023-01-15'),
+        fechaConstruccion: new Date('2020-03-10'),
+        descripcion: 'Hermosa casa familiar con jardín amplio y garage para 2 vehículos'
+      },
+      {
+        id: 2,
+        tipo: 'apartamento',
+        direccion: 'Carrera 80 #25-30 Apto 502',
+        ubicacion: 'Centro - El Poblado',
+        numeroCuartos: 2,
+        renta: 800000,
+        identificacionDueno: '87654321',
+        nombreDueno: 'Gabriel Espitia',
+        telefonoDueno: '+57 312 987 6543',
+        emailDueno: 'gaby_esp@gmail.com',
+        fotoPrincipal: 'assets/apto1.jpg',
+        fechaRegistroCompra: new Date('2023-06-20'),
+        fechaConstruccion: new Date('2019-11-15'),
+        descripcion: 'Moderno apartamento en zona céntrica con excelente ubicación'
+      }
+    ];
+    
     this.inicializarDatos();
     this.generarOpcionesFiltros();
     this.aplicarFiltros();
@@ -268,6 +239,10 @@ export class BuscarPropiedadesComponent implements OnInit {
   }
 
   formatearFecha(fecha: Date): string {
-    return fecha.toLocaleDateString('es-CO');
+    return new Date(fecha).toLocaleDateString('es-CO');
+  }
+
+  recargarPropiedades() {
+    this.cargarPropiedades();
   }
 }
