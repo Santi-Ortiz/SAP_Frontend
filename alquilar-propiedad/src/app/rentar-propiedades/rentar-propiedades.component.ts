@@ -7,9 +7,9 @@ import { SolicitudService, Renta } from '../services/renta.service';
 interface Cliente {
   nombre: string;
   contrasena: string;
-  correoElectronico: string;
-  tipoIdentificacion: string;
-  numeroIdentificacion: string;
+  correo: string;
+  tipoDoc: string;
+  numeroDoc: string;
 }
 
 @Component({
@@ -19,7 +19,7 @@ interface Cliente {
 })
 export class RentarPropiedadesComponent implements OnInit {
 
-  propiedadId: number = 0;
+  idPropiedad: number = 0; 
   propiedadSeleccionada: Propiedad | null = null;
   mostrarFormulario: boolean = true;
   solicitudEnviada: boolean = false;
@@ -35,30 +35,30 @@ export class RentarPropiedadesComponent implements OnInit {
   errores: {
     nombre: string;
     contrasena: string;
-    correoElectronico: string;
-    tipoIdentificacion: string;
-    numeroIdentificacion: string;
+    correo: string;
+    tipoDoc: string;
+    numeroDoc: string;
   } = {
     nombre: '',
     contrasena: '',
-    correoElectronico: '',
-    tipoIdentificacion: '',
-    numeroIdentificacion: ''
+    correo: '',
+    tipoDoc: '',
+    numeroDoc: ''
   };
 
   // Controlar si los campos han sido tocados
   camposTocados: {
     nombre: boolean;
     contrasena: boolean;
-    correoElectronico: boolean;
-    tipoIdentificacion: boolean;
-    numeroIdentificacion: boolean;
+    correo: boolean;
+    tipoDoc: boolean;
+    numeroDoc: boolean;
   } = {
     nombre: false,
     contrasena: false,
-    correoElectronico: false,
-    tipoIdentificacion: false,
-    numeroIdentificacion: false
+    correo: false,
+    tipoDoc: false,
+    numeroDoc: false
   };
 
   // Regex para validar email
@@ -68,9 +68,9 @@ export class RentarPropiedadesComponent implements OnInit {
   cliente: Cliente = {
     nombre: '',
     contrasena: '',
-    correoElectronico: '',
-    tipoIdentificacion: '',
-    numeroIdentificacion: ''
+    correo: '',
+    tipoDoc: '',
+    numeroDoc: ''
   };
 
   constructor(
@@ -82,7 +82,7 @@ export class RentarPropiedadesComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.propiedadId = +params['id'];
+      this.idPropiedad = +params['id']; // Conservando idPropiedad
       this.cargarPropiedad();
     });
   }
@@ -91,16 +91,18 @@ export class RentarPropiedadesComponent implements OnInit {
     this.cargandoPropiedad = true;
     this.error = '';
     
-    this.propiedadService.obtenerPropiedadPorId(this.propiedadId).subscribe({
+    this.propiedadService.obtenerPropiedadPorId(this.idPropiedad).subscribe({
       next: (propiedad) => {
+        console.log('Propiedad cargada desde API:', propiedad);
         this.propiedadSeleccionada = propiedad;
         this.cargandoPropiedad = false;
       },
       error: (error) => {
         console.error('Error al cargar la propiedad:', error);
-        this.error = 'Error al cargar la propiedad. Redirigiendo...';
+        this.error = 'Error al cargar la propiedad. Verifique la conexión con el servidor.';
         this.cargandoPropiedad = false;
-        // Redirigir después de 3 segundos
+        
+        // Redirigir después de 3 segundos si hay error
         setTimeout(() => {
           this.router.navigate(['/propiedades']);
         }, 3000);
@@ -108,7 +110,7 @@ export class RentarPropiedadesComponent implements OnInit {
     });
   }
 
-  // ...existing code... (mantener todas las funciones de validación)
+  // ...existing code... (mantener todas las funciones de validación exactamente igual)
   validarNombre(): boolean {
     if (!this.camposTocados.nombre) return true;
     
@@ -136,56 +138,56 @@ export class RentarPropiedadesComponent implements OnInit {
   }
 
   validarCorreoElectronico(): boolean {
-    if (!this.camposTocados.correoElectronico) return true;
+    if (!this.camposTocados.correo) return true;
     
-    const email = this.cliente.correoElectronico.trim();
+    const email = this.cliente.correo.trim();
     
     if (!email) {
-      this.errores.correoElectronico = 'El correo electrónico es obligatorio';
+      this.errores.correo = 'El correo electrónico es obligatorio';
       return false;
     }
     
     if (!this.emailRegex.test(email)) {
-      this.errores.correoElectronico = 'Por favor ingrese un correo electrónico válido (ejemplo: usuario@dominio.com)';
+      this.errores.correo = 'Por favor ingrese un correo electrónico válido (ejemplo: usuario@dominio.com)';
       return false;
     }
     
-    this.errores.correoElectronico = '';
+    this.errores.correo = '';
     return true;
   }
 
   validarTipoIdentificacion(): boolean {
-    if (!this.camposTocados.tipoIdentificacion) return true;
+    if (!this.camposTocados.tipoDoc) return true;
     
-    if (!this.cliente.tipoIdentificacion) {
-      this.errores.tipoIdentificacion = 'Debe seleccionar un tipo de identificación';
+    if (!this.cliente.tipoDoc) {
+      this.errores.tipoDoc = 'Debe seleccionar un tipo de identificación';
       return false;
     }
-    this.errores.tipoIdentificacion = '';
+    this.errores.tipoDoc = '';
     return true;
   }
 
   validarNumeroIdentificacion(): boolean {
-    if (!this.camposTocados.numeroIdentificacion) return true;
+    if (!this.camposTocados.numeroDoc) return true;
     
-    const numero = this.cliente.numeroIdentificacion.trim();
+    const numero = this.cliente.numeroDoc.trim();
     
     if (!numero) {
-      this.errores.numeroIdentificacion = 'El número de identificación es obligatorio';
+      this.errores.numeroDoc = 'El número de identificación es obligatorio';
       return false;
     }
     
     if (numero.length < 5) {
-      this.errores.numeroIdentificacion = 'El número de identificación debe tener al menos 5 caracteres';
+      this.errores.numeroDoc = 'El número de identificación debe tener al menos 5 caracteres';
       return false;
     }
     
     if (!/^[0-9a-zA-Z-]+$/.test(numero)) {
-      this.errores.numeroIdentificacion = 'El número de identificación solo puede contener números, letras y guiones';
+      this.errores.numeroDoc = 'El número de identificación solo puede contener números, letras y guiones';
       return false;
     }
     
-    this.errores.numeroIdentificacion = '';
+    this.errores.numeroDoc = '';
     return true;
   }
 
@@ -194,10 +196,10 @@ export class RentarPropiedadesComponent implements OnInit {
     const nombreValido = this.cliente.nombre.trim().length >= 2 && 
                         /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(this.cliente.nombre.trim());
     const contrasenaValida = this.cliente.contrasena.trim().length >= 6;
-    const correoValido = this.emailRegex.test(this.cliente.correoElectronico.trim());
-    const tipoIdValido = this.cliente.tipoIdentificacion !== '';
-    const numeroIdValido = this.cliente.numeroIdentificacion.trim().length >= 5 &&
-                          /^[0-9a-zA-Z-]+$/.test(this.cliente.numeroIdentificacion.trim());
+    const correoValido = this.emailRegex.test(this.cliente.correo.trim());
+    const tipoIdValido = this.cliente.tipoDoc !== '';
+    const numeroIdValido = this.cliente.numeroDoc.trim().length >= 5 &&
+                          /^[0-9a-zA-Z-]+$/.test(this.cliente.numeroDoc.trim());
 
     return nombreValido && contrasenaValida && correoValido && tipoIdValido && numeroIdValido;
   }
@@ -214,17 +216,17 @@ export class RentarPropiedadesComponent implements OnInit {
   }
 
   onBlurCorreo() {
-    this.camposTocados.correoElectronico = true;
+    this.camposTocados.correo = true;
     this.validarCorreoElectronico();
   }
 
   onBlurTipoId() {
-    this.camposTocados.tipoIdentificacion = true;
+    this.camposTocados.tipoDoc = true;
     this.validarTipoIdentificacion();
   }
 
   onBlurNumeroId() {
-    this.camposTocados.numeroIdentificacion = true;
+    this.camposTocados.numeroDoc = true;
     this.validarNumeroIdentificacion();
   }
 
@@ -234,9 +236,9 @@ export class RentarPropiedadesComponent implements OnInit {
     this.camposTocados = {
       nombre: true,
       contrasena: true,
-      correoElectronico: true,
-      tipoIdentificacion: true,
-      numeroIdentificacion: true
+      correo: true,
+      tipoDoc: true,
+      numeroDoc: true
     };
 
     // Validar todos los campos
@@ -257,13 +259,14 @@ export class RentarPropiedadesComponent implements OnInit {
 
     this.procesando = true;
 
+    // Preparar solicitud usando idPropiedad pero mapeando a propiedadId para el backend
     const solicitud: Renta = {
-      propiedadId: this.propiedadId,
-      nombreSolicitante: this.cliente.nombre,
-      correoElectronico: this.cliente.correoElectronico,
+      idPropiedad: this.idPropiedad, // Backend espera propiedadId
+      nombre: this.cliente.nombre,
+      correo: this.cliente.correo,
       contrasena: this.cliente.contrasena,
-      tipoIdentificacion: this.cliente.tipoIdentificacion,
-      numeroIdentificacion: this.cliente.numeroIdentificacion
+      tipoDoc: this.cliente.tipoDoc,
+      numeroDoc: this.cliente.numeroDoc
     };
 
     // Enviar al backend
@@ -273,7 +276,7 @@ export class RentarPropiedadesComponent implements OnInit {
         
         // Generar datos para mostrar
         this.fechaSolicitud = new Date().toLocaleDateString('es-CO');
-        this.numeroReferencia = response.numeroReferencia || `ALQ${this.propiedadId}${Date.now()}`;
+        this.numeroReferencia = response.numeroReferencia || `ALQ${this.idPropiedad}${Date.now()}`;
         
         this.procesando = false;
         this.mostrarFormulario = false;
@@ -305,5 +308,26 @@ export class RentarPropiedadesComponent implements OnInit {
       currency: 'COP',
       minimumFractionDigits: 0
     }).format(precio);
+  }
+
+  // Funciones para obtener información del propietario (sin parámetros)
+  obtenerPropietario(): string {
+    console.log('Verificando propietario de propiedadSeleccionada:', this.propiedadSeleccionada);
+    return this.propiedadSeleccionada?.cliente?.nombre || 'Propietario no disponible';
+  }
+
+  obtenerEmailPropietario(): string {
+    return this.propiedadSeleccionada?.cliente?.correo || 'Email no disponible';
+  }
+
+  obtenerIdentificacionPropietario(): string {
+    if (this.propiedadSeleccionada?.cliente) {
+      return `${this.propiedadSeleccionada.cliente.tipoDoc} ${this.propiedadSeleccionada.cliente.numeroDoc}`;
+    }
+    return 'ID no disponible';
+  }
+
+  obtenerTelefonoPropietario(): string {
+    return '+57 300 123 4567'; // Temporal
   }
 }

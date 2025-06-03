@@ -1,8 +1,8 @@
 export interface Cliente {
     id: number;
     nombre: string;
-    contrasena: string
-    correoElectronico: string;
-    tipoIdentificacion: string;
-    numeroIdentificacion: string;
+    contrasena: string;
+    correo: string;
+    tipoDoc: string;
+    numeroDoc: string;
 }

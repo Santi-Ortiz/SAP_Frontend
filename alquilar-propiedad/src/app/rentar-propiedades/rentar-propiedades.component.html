@@ -21,7 +21,7 @@
           <span>🛏️ {{propiedadSeleccionada.numeroCuartos}} cuartos</span>
           <span class="precio">{{formatearPrecio(propiedadSeleccionada.renta)}}/mes</span>
         </div>
-        <p class="propietario">👤 Propietario: {{propiedadSeleccionada.nombreDueno}}</p>
+        <p class="propietario">👤 Propietario: {{obtenerPropietario()}}</p>
       </div>
     </div>
   </div>
@@ -72,13 +72,13 @@
         <input 
           type="email" 
           id="correo" 
-          [(ngModel)]="cliente.correoElectronico" 
+          [(ngModel)]="cliente.correo" 
           name="correo"
           placeholder="ejemplo@correo.com"
           (blur)="onBlurCorreo()"
-          [class.campo-error]="camposTocados.correoElectronico && errores.correoElectronico"
+          [class.campo-error]="camposTocados.correo && errores.correo"
           required>
-        <span class="mensaje-error" *ngIf="camposTocados.correoElectronico && errores.correoElectronico">{{errores.correoElectronico}}</span>
+        <span class="mensaje-error" *ngIf="camposTocados.correo && errores.correo">{{errores.correo}}</span>
         <small class="ayuda-texto">Formato válido: usuario@dominio.com</small>
       </div>
 
@@ -87,10 +87,10 @@
         <label for="tipoId">Tipo de Identificación *</label>
         <select 
           id="tipoId" 
-          [(ngModel)]="cliente.tipoIdentificacion" 
+          [(ngModel)]="cliente.tipoDoc" 
           name="tipoId"
           (blur)="onBlurTipoId()"
-          [class.campo-error]="camposTocados.tipoIdentificacion && errores.tipoIdentificacion"
+          [class.campo-error]="camposTocados.tipoDoc && errores.tipoDoc"
           required>
           <option value="">Seleccione un tipo</option>
           <option value="CC">Cédula de Ciudadanía</option>
@@ -99,7 +99,7 @@
           <option value="TI">Tarjeta de Identidad</option>
           <option value="NIT">NIT</option>
         </select>
-        <span class="mensaje-error" *ngIf="camposTocados.tipoIdentificacion && errores.tipoIdentificacion">{{errores.tipoIdentificacion}}</span>
+        <span class="mensaje-error" *ngIf="camposTocados.tipoDoc && errores.tipoDoc">{{errores.tipoDoc}}</span>
       </div>
 
       <!-- Número de identificación -->
@@ -108,13 +108,13 @@
         <input 
           type="text" 
           id="numeroId" 
-          [(ngModel)]="cliente.numeroIdentificacion" 
+          [(ngModel)]="cliente.numeroDoc" 
           name="numeroId"
           placeholder="Ingrese su número de identificación"
           (blur)="onBlurNumeroId()"
-          [class.campo-error]="camposTocados.numeroIdentificacion && errores.numeroIdentificacion"
+          [class.campo-error]="camposTocados.numeroDoc && errores.numeroDoc"
           required>
-        <span class="mensaje-error" *ngIf="camposTocados.numeroIdentificacion && errores.numeroIdentificacion">{{errores.numeroIdentificacion}}</span>
+        <span class="mensaje-error" *ngIf="camposTocados.numeroDoc && errores.numeroDoc">{{errores.numeroDoc}}</span>
       </div>
 
       <!-- Botones de acción -->
@@ -159,7 +159,7 @@
         <div class="pasos-siguientes">
           <h4>📋 Próximos pasos:</h4>
           <ul>
-            <li>Recibirá un correo de confirmación en: <strong>{{cliente.correoElectronico}}</strong></li>
+            <li>Recibirá un correo de confirmación en: <strong>{{cliente.correo}}</strong></li>
             <li>La institución financiera validará su información</li>
             <li>Se comunicarán con usted para coordinar la firma del contrato</li>
             <li>El propietario será notificado de su interés</li>
@@ -169,7 +169,7 @@
         <div class="datos-referencia">
           <h4>📄 Datos de referencia:</h4>
           <p><strong>Solicitante:</strong> {{cliente.nombre}}</p>
-          <p><strong>Identificación:</strong> {{cliente.tipoIdentificacion}} {{cliente.numeroIdentificacion}}</p>
+          <p><strong>Identificación:</strong> {{cliente.tipoDoc}} {{cliente.numeroDoc}}</p>
           <p><strong>Fecha de solicitud:</strong> {{fechaSolicitud}}</p>
           <p><strong>Número de referencia:</strong> #{{numeroReferencia}}</p>
         </div>

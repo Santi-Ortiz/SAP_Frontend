@@ -1,3 +1,5 @@
+import { Cliente } from './cliente.model';
+
 export interface Propiedad {
     id: number;
     tipo: 'casa' | 'apartamento';
@@ -5,12 +7,10 @@ export interface Propiedad {
     ubicacion: string;
     numeroCuartos: number;
     renta: number;
-    identificacionDueno: string;
-    nombreDueno: string;
-    telefonoDueno: string;
-    emailDueno: string;
     fotoPrincipal: string;
     fechaRegistroCompra: Date;
     fechaConstruccion: Date;
     descripcion: string;
+    usuarioId: number;
+    cliente: Cliente;
 }

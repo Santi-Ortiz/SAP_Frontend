@@ -3,14 +3,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Renta {
-  propiedadId: number;
-  nombreSolicitante: string;
-  correoElectronico: string;
+  idPropiedad: number;
+  nombre: string;
+  correo: string;
   contrasena: string;
-  tipoIdentificacion: string;
-  numeroIdentificacion: string;
-  fechaSolicitud?: Date;
-  numeroReferencia?: string;
+  tipoDoc: string;
+  numeroDoc: string;
 }
 
 @Injectable({
@@ -18,8 +16,8 @@ export interface Renta {
 })
 export class SolicitudService {
   
-  private apiUrl = 'http://localhost:8080/api/renta'; 
-  
+  private apiUrl = 'http://10.43.103.226/renta'; 
+
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'

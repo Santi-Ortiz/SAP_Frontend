@@ -149,10 +149,9 @@
         <!-- Información del dueño -->
         <div class="dueno-section">
           <h4>👤 Propietario</h4>
-          <p><strong>{{propiedad.nombreDueno}}</strong></p>
-          <p class="id-dueno">ID: {{propiedad.identificacionDueno}}</p>
-          <p class="contacto">📞 {{propiedad.telefonoDueno}}</p>
-          <p class="contacto">📧 {{propiedad.emailDueno}}</p>
+          <p><strong>{{obtenerPropietario(propiedad)}}</strong></p>
+          <p class="id-dueno">{{obtenerIdentificacionPropietario(propiedad)}}</p>
+          <p class="contacto">📧 {{obtenerEmailPropietario(propiedad)}}</p>
         </div>
 
         <!-- Fechas importantes -->

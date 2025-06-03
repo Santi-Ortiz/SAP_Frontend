@@ -8,7 +8,7 @@ import { Propiedad } from '../models/propiedad.model';
 })
 export class PropiedadService {
   
-  private apiUrl = 'http://localhost:8080/api/propiedades'; 
+  private apiUrl = 'http://10.43.103.226:8080/MSBuscarPropiedad-0.0.1-SNAPSHOT/api/propiedades';
   
   private httpOptions = {
     headers: new HttpHeaders({
@@ -18,12 +18,12 @@ export class PropiedadService {
 
   constructor(private http: HttpClient) { }
 
-  // Obtener todas las propiedades
+  // Obtener todas las propiedades con información del propietario
   obtenerPropiedades(): Observable<Propiedad[]> {
     return this.http.get<Propiedad[]>(this.apiUrl);
   }
 
-  // Obtener una propiedad por ID
+  // Obtener una propiedad por ID con información del propietario
   obtenerPropiedadPorId(id: number): Observable<Propiedad> {
     return this.http.get<Propiedad>(`${this.apiUrl}/${id}`);
   }
@@ -43,8 +43,13 @@ export class PropiedadService {
     return this.http.delete(`${this.apiUrl}/${id}`, this.httpOptions);
   }
 
-  // Filtrar propiedades 
+  // Filtrar propiedades (opcional)
   filtrarPropiedades(filtros: any): Observable<Propiedad[]> {
     return this.http.post<Propiedad[]>(`${this.apiUrl}/filtrar`, filtros, this.httpOptions);
+  }
+
+  // Obtener propiedades por propietario
+  obtenerPropiedadesPorPropietario(usuarioId: number): Observable<Propiedad[]> {
+    return this.http.get<Propiedad[]>(`${this.apiUrl}/propietario/${usuarioId}`);
   }
 }
